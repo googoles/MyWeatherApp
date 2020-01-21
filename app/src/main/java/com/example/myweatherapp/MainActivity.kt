@@ -90,6 +90,13 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
         mLocationRequest!!.interval = 10000 // 10sec
         mLocationRequest!!.fastestInterval = 5000 // 5sec
         mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+
+        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+        {
+           return
+        }
+        LocationService.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this)
     }
 
 
