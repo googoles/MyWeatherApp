@@ -4,6 +4,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.common.ConnectionResult
@@ -100,17 +101,18 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
     }
 
 
+
     override fun onConnectionFailed(p0: ConnectionResult) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Log.i("Error","Connection Failed: "+p0.errorCode)
     }
 
 
     override fun onLocationChanged(p0: Location?) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onConnectionSuspended(p0: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mGoogleApiClient!!.connect()
     }
 
 }
