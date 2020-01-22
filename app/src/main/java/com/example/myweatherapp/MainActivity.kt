@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
     val PERMISSION_REQUEST_CODE = 1001
     val PLAY_SERVICE_RESOLUTION_REQUEST = 1000
             // Variable
-    val mGoogleApiClient: GoogleApiClient?=null
+    var mGoogleApiClient: GoogleApiClient?=null
     var mLocationRequest: LocationRequest?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
         setContentView(R.layout.activity_main)
 
         requestPermission();
+        if(checkPlayService())
+            buildGoogleApiClient()
 
     }
 
@@ -73,7 +75,10 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
     private fun checkPlayService(): Boolean {
         val resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this)
         if(resultCode != ConnectionResult.SUCCESS){
-            if(GooglePlayServicesUtil.getErrorDialog(resultCode,this,PLAY_SERVICE_RESOLUTION_REQUEST).show())
+            if(GooglePlayServicesUtil.isUserRecoverableError(resultCode))
+            {
+                GooglePlayServicesUtil.getErrorDialog(resultCode,this,PLAY_SERVICE_RESOLUTION_REQUEST).show()
+            }
         }
         else
         {
@@ -98,7 +103,7 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
         {
            return
         }
-        LocationService.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this)
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,mLocationRequest,this)
     }
 
 
@@ -107,8 +112,7 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
         Log.i("Error","Connection Failed: "+p0.errorCode)
     }
 
-
-    override fun onLocationChanged(p0: Location?) {
+    override fun onLocationChanged(location: Location?) {
         txtLocation.text = "${location!!.latitude} - ${location!!.longitude}"
     }
 
@@ -116,4 +120,20 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
         mGoogleApiClient!!.connect()
     }
 
+    override fun onStart() {
+        super.onStart()
+        if(mGoogleApiClient != null){
+            mGoogleApiClient!!.connect()
+        }
+    }
+
+    override fun onDestroy() {
+        mGoogleApiClient!!.disconnect()
+        super.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        checkPlayService()
+    }
 }
