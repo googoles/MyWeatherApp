@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.location.LocationListener
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
+import kotlinx.android.synthetic.main.activity_main.*
 import java.util.jar.Manifest
 
 class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedListener, GoogleApiClient.ConnectionCallbacks, LocationListener
@@ -108,7 +109,7 @@ class MainActivity : AppCompatActivity() , GoogleApiClient.OnConnectionFailedLis
 
 
     override fun onLocationChanged(p0: Location?) {
-
+        txtLocation.text = "${location!!.latitude} - ${location!!.longitude}"
     }
 
     override fun onConnectionSuspended(p0: Int) {
